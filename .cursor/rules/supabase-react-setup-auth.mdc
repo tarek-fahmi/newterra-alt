@@ -1,0 +1,348 @@
+---
+description: Guidelines for writing React apps with Supabase Auth
+globs: 
+alwaysApply: false
+---
+# React + Vite + Supabase App with Authentication
+
+---
+description: Complete guidelines for React app with Supabase Auth and TypeScript
+globs: **/*.ts, **/*.tsx, **/*.js, **/*.jsx
+alwaysApply: true
+---
+
+## Project Tech Stack
+- React 18+ with TypeScript
+- Vite as build tool and dev server
+- Supabase for backend (authentication, database, storage)
+- React Router for navigation and protected routes
+- Docker for containerization
+
+## Overview of the Project Structure
+```
+src/
+├── components/     # Reusable components
+├── contexts/       # React contexts (including auth)
+├── hooks/          # Custom hooks
+├── lib/            # Utilities and libraries
+│   └── supabaseClient.ts  # Supabase client configuration
+├── pages/          # Page components
+├── types/          # TypeScript type definitions
+├── App.tsx         # Main App component
+├── App.css         # App styles
+├── main.tsx        # Application entry point
+└── router.tsx      # Router configuration with protected routes
+```
+
+## Environment Setup
+The project uses these environment variables in `.env.local`:
+```
+VITE_SUPABASE_URL=your_supabase_project_url
+VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+```
+
+## 🚨 CRITICAL INSTRUCTIONS FOR AI ASSISTANTS 🚨
+
+As an AI assistant, you MUST follow these guidelines when implementing or modifying Supabase Auth in this React app:
+
+1. Always use the latest version of @supabase/supabase-js (currently 2.x)
+2. Implement proper error handling for authentication operations
+3. Use environment variables for Supabase credentials
+4. Implement proper session management
+5. Handle authentication state changes correctly
+6. Follow the TypeScript patterns established in the project
+
+## SUPABASE CLIENT IMPLEMENTATION
+
+```typescript
+// src/lib/supabaseClient.ts
+import { createClient } from '@supabase/supabase-js'
+
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
+
+if (!supabaseUrl || !supabaseAnonKey) {
+  throw new Error('Missing Supabase environment variables')
+}
+
+export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+  auth: {
+    autoRefreshToken: true,
+    persistSession: true,
+    detectSessionInUrl: true
+  }
+})
+```
+
+## AUTH CONTEXT IMPLEMENTATION
+
+```typescript
+// src/contexts/SupabaseContext.tsx
+import { createContext, useContext, useEffect, useState, ReactNode } from 'react'
+import { Session, User } from '@supabase/supabase-js'
+import { supabase } from '../lib/supabaseClient'
+import { SupabaseError } from '../types'
+
+type SupabaseContextType = {
+  session: Session | null
+  user: User | null
+  loading: boolean
+  error: SupabaseError | null
+  signIn: (email: string, password: string) => Promise<void>
+  signUp: (email: string, password: string) => Promise<void>
+  signOut: () => Promise<void>
+}
+
+const SupabaseContext = createContext<SupabaseContextType | undefined>(undefined)
+
+export function SupabaseProvider({ children }: { children: ReactNode }) {
+  const [session, setSession] = useState<Session | null>(null)
+  const [user, setUser] = useState<User | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<SupabaseError | null>(null)
+
+  useEffect(() => {
+    // Get initial session
+    supabase.auth.getSession().then(({ data: { session }, error }) => {
+      if (error) {
+        setError({ message: error.message })
+      } else {
+        setSession(session)
+        setUser(session?.user ?? null)
+      }
+      setLoading(false)
+    })
+
+    // Listen for auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session)
+      setUser(session?.user ?? null)
+      setLoading(false)
+    })
+
+    return () => {
+      subscription.unsubscribe()
+    }
+  }, [])
+
+  const signIn = async (email: string, password: string) => {
+    try {
+      setLoading(true)
+      setError(null)
+      const { error } = await supabase.auth.signInWithPassword({ email, password })
+      if (error) throw error
+    } catch (err: any) {
+      setError({ message: err.message })
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const signUp = async (email: string, password: string) => {
+    try {
+      setLoading(true)
+      setError(null)
+      const { error } = await supabase.auth.signUp({ email, password })
+      if (error) throw error
+    } catch (err: any) {
+      setError({ message: err.message })
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const signOut = async () => {
+    try {
+      setLoading(true)
+      setError(null)
+      const { error } = await supabase.auth.signOut()
+      if (error) throw error
+    } catch (err: any) {
+      setError({ message: err.message })
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const value = {
+    session,
+    user,
+    loading,
+    error,
+    signIn,
+    signUp,
+    signOut
+  }
+
+  return (
+    <SupabaseContext.Provider value={value}>
+      {children}
+    </SupabaseContext.Provider>
+  )
+}
+
+export function useSupabase() {
+  const context = useContext(SupabaseContext)
+  if (context === undefined) {
+    throw new Error('useSupabase must be used within a SupabaseProvider')
+  }
+  return context
+}
+```
+
+## PROTECTED ROUTE IMPLEMENTATION
+
+```typescript
+// src/components/ProtectedRoute.tsx
+import { Navigate, Outlet } from 'react-router-dom'
+import { useSupabase } from '../contexts/SupabaseContext'
+
+type ProtectedRouteProps = {
+  redirectTo?: string
+}
+
+export const ProtectedRoute = ({ 
+  redirectTo = '/login'
+}: ProtectedRouteProps) => {
+  const { user, loading } = useSupabase()
+
+  if (loading) {
+    return <div>Loading...</div>
+  }
+
+  if (!user) {
+    return <Navigate to={redirectTo} replace />
+  }
+
+  return <Outlet />
+}
+```
+
+## ROUTER IMPLEMENTATION WITH PROTECTED ROUTES
+
+```typescript
+// src/router.tsx
+import { createBrowserRouter } from 'react-router-dom'
+import App from './App'
+import { ProtectedRoute } from './components/ProtectedRoute'
+import { Login } from './pages/Login'
+import { Register } from './pages/Register'
+import { Dashboard } from './pages/Dashboard'
+import { SupabaseProvider } from './contexts/SupabaseContext'
+
+// Wrap with SupabaseProvider to provide auth context
+const AppWithProvider = () => (
+  <SupabaseProvider>
+    <App />
+  </SupabaseProvider>
+)
+
+export const router = createBrowserRouter([
+  {
+    path: '/',
+    element: <AppWithProvider />,
+    children: [
+      { path: 'login', element: <Login /> },
+      { path: 'register', element: <Register /> },
+      { 
+        element: <ProtectedRoute />,
+        children: [
+          { path: 'dashboard', element: <Dashboard /> },
+          // Add more protected routes here
+        ]
+      }
+    ]
+  }
+])
+```
+
+## LOGIN COMPONENT IMPLEMENTATION
+
+```typescript
+// src/pages/Login.tsx
+import { useState, FormEvent } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { useSupabase } from '../contexts/SupabaseContext'
+
+export const Login = () => {
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const { signIn, loading, error } = useSupabase()
+  const navigate = useNavigate()
+
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault()
+    await signIn(email, password)
+    // Only navigate if no error occurred (signIn handles its own errors)
+    if (!error) {
+      navigate('/dashboard')
+    }
+  }
+
+  return (
+    <div>
+      <h1>Login</h1>
+      {error && <div className="error">{error.message}</div>}
+      <form onSubmit={handleSubmit}>
+        <div>
+          <label htmlFor="email">Email</label>
+          <input
+            id="email"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+        </div>
+        <div>
+          <label htmlFor="password">Password</label>
+          <input
+            id="password"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+        </div>
+        <button type="submit" disabled={loading}>
+          {loading ? 'Loading...' : 'Login'}
+        </button>
+      </form>
+    </div>
+  )
+}
+```
+
+## DOCKER CONFIGURATION
+
+The project uses Docker for containerization with:
+- Dockerfile for production build
+- docker-compose.yml for orchestration
+- nginx.conf for serving the built app
+
+## AI ASSISTANT VERIFICATION CHECKLIST
+
+Before implementing or modifying authentication code, verify:
+
+1. ✅ Using the latest version of @supabase/supabase-js
+2. ✅ Implementing proper error handling with try/catch blocks
+3. ✅ Using environment variables for all Supabase credentials
+4. ✅ Implementing proper session management with onAuthStateChange
+5. ✅ Correctly handling loading states for authentication operations
+6. ✅ Using TypeScript interfaces/types for all authentication-related data
+7. ✅ Properly protecting routes that require authentication
+
+## COMMON ISSUES AND SOLUTIONS
+
+1. **Authentication loops**: Ensure proper handling of auth state changes with unsubscribing from listeners
+2. **Token refresh failures**: Use autoRefreshToken in Supabase client options
+3. **Session persistence issues**: Use persistSession option in Supabase client
+4. **Route protection bypasses**: Verify ProtectedRoute component logic
+5. **Environment variable errors**: Validate environment variables before creating client
+
+## DEVELOPMENT WORKFLOW
+
+1. Run the development server: `npm run dev`
+2. Build for production: `npm run build`
+3. Run type checking separately: `npm run type-check`
+4. Run Docker container: `docker-compose up --build`
