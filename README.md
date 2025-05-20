@@ -91,97 +91,20 @@ src/
 3. Create `.env.local` with Supabase credentials
 4. Start the development server: `npm run dev`
 
+### Local Supabase Development URLs
+
+When running Supabase locally via `npx supabase start`, the following services will be available:
+
+- **API URL**: `http://127.0.0.1:54321`
+- **GraphQL URL**: `http://127.0.0.1:54321/graphql/v1`
+- **Database URL**: `postgresql://postgres:postgres@127.0.0.1:54322/postgres`
+- **Supabase Studio URL**: `http://127.0.0.1:54323`
+- **Inbucket (Email Testing) URL**: `http://127.0.0.1:54324`
+
+**Note**: Sensitive information like JWT secret, anon key, and service_role key are not included here for security reasons. These are displayed in your terminal when you run `npx supabase start` and should be configured in your `.env.local` or equivalent environment configuration as needed.
+
 ### Docker Setup
 
 For containerized development:
 
-```bash
-docker-compose up --build
 ```
-
-## Deployment
-
-### Production Build
-
-```bash
-npm run build
-```
-
-This produces optimized assets in the `dist` directory.
-
-### Docker Deployment
-
-The multi-stage Dockerfile optimizes for:
-- Dependency caching
-- Build optimization
-- Minimal production image size
-
-## Testing
-
-Run tests with:
-
-```bash
-npm run test
-```
-
-## Future Enhancements
-
-### Planned API Integrations
-
-1. **Xero Integration**
-   - OAuth flow for Xero authentication
-   - Financial data synchronization
-
-2. **SharePoint Integration**
-   - Microsoft Graph API integration
-   - Document retrieval and management
-
-3. **Monday.com Integration**
-   - Webhook support for real-time updates
-   - Project data synchronization
-
-### Performance Optimizations
-
-- Implement React Suspense for data loading
-- Add service worker for offline capabilities
-- Set up Lazy loading for route components
-
-### Infrastructure Improvements
-
-- Add CI/CD pipeline
-- Implement monitoring and logging
-- Set up automatic backups and disaster recovery
-
-## Maintenance Guidelines
-
-### Dependency Management
-
-- Regular updates for security patches
-- Compatibility testing before major version upgrades
-- Dependency audit during sprint planning
-
-### Code Quality
-
-- ESLint and Prettier for code consistency
-- TypeScript for type safety
-- Component documentation with Storybook
-
-### Database Management
-
-- Monitor Supabase usage and performance
-- Plan for database migrations as schema evolves
-- Regular backups of critical data
-
-## Troubleshooting
-
-### Common Issues
-
-1. **Authentication Issues**
-   - Verify Supabase environment variables
-   - Check RLS policies
-   - Validate JWT token expiration
-
-2. **API Integration Problems**
-   - Validate API keys and credentials
-   - Check CORS configuration
-   - Verify payload formats
