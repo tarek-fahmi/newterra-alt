@@ -1,57 +1,52 @@
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import './App.css'
-import { supabase } from './lib/supabaseClient'
-import { DataItem } from './types'
+import { useNavigate } from 'react-router-dom'
+import { useSupabase } from './contexts/supabaseContext'
+import LoadingSpinner from './components/ui/LoadingSpinner'
 
 function App() {
-  const [data, setData] = useState<DataItem[]>([])
-  const [loading, setLoading] = useState<boolean>(true)
-  const [error, setError] = useState<string | null>(null)
+  const { user, signOut, error } = useSupabase()
+  const [isSigningOut, setIsSigningOut] = useState(false)
+  const navigate = useNavigate()
 
   useEffect(() => {
-    async function fetchData() {
-      try {
-        setLoading(true)
-
-        // Replace 'your_table_name' with your actual table name
-        const { data, error } = await supabase
-          .from('your_table_name')
-          .select('*')
-
-        if (error) throw error
-
-        setData(data || [])
-      } catch (err: any) {
-        setError(err.message)
-      } finally {
-        setLoading(false)
-      }
+    if (!user) {
+      navigate('/')
     }
+  }, [user, navigate])
 
-    fetchData()
-  }, [])
+  const handleSignOut = async () => {
+    setIsSigningOut(true)
+    try {
+      await signOut()
+      // Navigate is handled by the useEffect
+    } catch (err) {
+      console.error('Error signing out:', err)
+    } finally {
+      setIsSigningOut(false)
+    }
+  }
 
   return (
     <div className="app">
-      <h1>My Supabase App</h1>
-
-      {loading && <p>Loading...</p>}
-      {error && <p>Error: {error}</p>}
-
-      {!loading && !error && (
-        <div>
-          <h2>Data from Supabase:</h2>
-          {data.length > 0 ? (
-            <ul>
-              {data.map((item) => (
-                <li key={item.id}>{item.name}</li>
-              ))}
-            </ul>
-          ) : (
-            <p>No data found</p>
-          )}
-        </div>
-      )}
+      <h1>Welcome to the App!</h1>
+      <p>This is the main application content, accessible after successful authentication.</p>
+      <div className="user-info">
+        <p>You are logged in as: <strong>{user?.email}</strong></p>
+        {error && <p className="error-message" role="alert">{error.message}</p>}
+      </div>
+      <button
+        onClick={handleSignOut}
+        className="submit-button sign-out-button"
+        disabled={isSigningOut}
+      >
+        {isSigningOut ? (
+          <>
+            <LoadingSpinner size="small" className="button-spinner" />
+            <span>Signing Out...</span>
+          </>
+        ) : 'Sign Out'}
+      </button>
     </div>
   )
 }

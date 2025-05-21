@@ -1,0 +1,92 @@
+---
+description: Guide for App Deployment (Docker + Supabase)
+globs: 
+alwaysApply: false
+---
+# NewTerra Development Setup Guide
+
+This guide provides instructions for new developers, build, run, and test the NewTerra web-app.
+
+
+## 1: Building, Containerizing, and Running / Prototyping Locally
+
+### Running the Development Server (Vite)
+
+This is the quickest way to run the application for local development and prototyping.
+
+1.  **Start the Vite Development Server**:
+    ```bash
+    npm run dev
+    # OR
+    pnpm dev
+    ```
+
+2.  **Access the Application**:
+    Open your web browser and navigate to `http://localhost:5173`. Vite provides Hot Module Replacement (HMR) for a fast development feedback loop.
+
+### Building for Production
+
+To create an optimized production build:
+
+1.  **Run the Build Command**:
+    ```bash
+    npx run build
+    # OR
+    pnpm build
+    ```
+    This command will compile the TypeScript code, bundle the assets, and output the static files to the `dist/` directory.
+
+### Containerizing with Docker
+
+The project includes a `Dockerfile` for building a production-ready Docker image and a `docker-compose.yml` for managing services.
+
+1.  **Build the Docker Image (Standalone)**:
+    If you want to build the image manually:
+    ```bash
+    docker build -t newterra-app .
+    ```
+
+2.  **Run the Docker Container (Standalone)**:
+    After building the image, you can run it as a container:
+    ```bash
+    docker run -p 3000:80 \
+      -e VITE_SUPABASE_URL=your_url \
+      -e VITE_SUPABASE_ANON_KEY=your_key \
+      newterra-app
+    ```
+    Replace `your_url` and `your_key` with your Supabase project's URL and anonymous key. The application will be accessible at `http://localhost:3000`.
+
+3.  **Using Docker Compose (Recommended for Local End-to-End Testing)**:
+    The `docker-compose.yml` file is configured to build and run the application.
+    ```bash
+    docker-compose up
+    ```
+    If you want to build the images first (e.g., after changes):
+    ```bash
+    docker-compose up --build
+    ```
+    This will start the `newterra-app` service (and potentially other services defined in the compose file). The application, served via Nginx in the Docker setup, will typically be available at `http://localhost:3000` (or as configured in `docker-compose.yml` and `nginx.conf`).
+
+### Testing
+
+*   **Linting**: Run ESLint to check for code quality and style issues:
+    ```bash
+    npm run lint
+    # OR
+    pnpm lint
+    ```
+*   **Type Checking**: Run TypeScript compiler to check for type errors:
+    ```bash
+    npm run type-check 
+    # or the command specified in your package.json for type checking (e.g., tsc --noEmit)
+    ```
+    (Ensure you have a `type-check` script in your `package.json` or use `npx tsc --noEmit` directly).
+
+*   **Manual Testing**:
+    *   Verify authentication flows (email/password, OAuth if configured).
+    *   Test password reset functionality.
+    *   Check protected routes and session management.
+    *   Ensure UI components render correctly and are accessible.
+    *   If using local Supabase, use Supabase Studio (`http://127.0.0.1:54323`) to inspect database changes, user creation, etc.
+
+This setup should allow any new developer to get the NewTerra application running and ready for development or testing.

@@ -1,6 +1,236 @@
+/* Base styles */
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+}
+
+/* Utility classes */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
+/* Password strength indicator */
+.password-strength {
+  margin-top: 8px;
+}
+
+.password-strength-meter {
+  height: 5px;
+  border-radius: 3px;
+  margin-bottom: 5px;
+  transition: all 0.3s ease;
+}
+
+.password-strength-weak {
+  background-color: #f44336;
+  width: 33%;
+}
+
+.password-strength-medium {
+  background-color: #ffa726;
+  width: 66%;
+}
+
+.password-strength-strong {
+  background-color: #4caf50;
+  width: 100%;
+}
+
+.password-requirements {
+  font-size: 12px;
+  color: #666;
+  margin-top: 4px;
+}
+
+/* Auth form styles */
+.auth-form {
+  width: 100%;
+  max-width: 400px;
+}
+
+.input-group {
+  margin-bottom: 16px;
+}
+
+.password-input-container {
+  display: flex;
+  position: relative;
+}
+
+.password-toggle {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #666;
+}
+
+.error-message {
+  color: #f44336;
+  margin-top: 8px;
+}
+
+.info-message {
+  color: #4caf50;
+  margin-top: 8px;
+}
+
+.oauth-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background-color: white;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.oauth-button:hover {
+  background-color: #f5f5f5;
+}
+
+.divider {
+  text-align: center;
+  margin: 16px 0;
+  position: relative;
+}
+
+.divider:before,
+.divider:after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: 45%;
+  height: 1px;
+  background-color: #ddd;
+}
+
+.divider:before {
+  left: 0;
+}
+
+.divider:after {
+  right: 0;
+}
+
+.submit-button {
+  width: 100%;
+  padding: 12px;
+  background-color: #4361ee;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.submit-button:hover {
+  background-color: #3a56d4;
+}
+
+.submit-button:disabled {
+  background-color: #b0bec5;
+  cursor: not-allowed;
+}
+
+.button-spinner {
+  color: white;
+}
+
+/* Checkbox label */
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+}
+
+.checkbox-label input[type="checkbox"] {
+  cursor: pointer;
+}
+
+/* Form options */
+.form-options {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  font-size: 14px;
+}
+
+/* App container */
 .app {
   max-width: 1280px;
   margin: 0 auto;
   padding: 2rem;
+  text-align: center;
+}
+
+/* User info section */
+.user-info {
+  margin: 20px 0;
+  padding: 15px;
+  background-color: #f5f7ff;
+  border-radius: 8px;
+  text-align: left;
+}
+
+.sign-out-button {
+  max-width: 200px;
+  margin: 0 auto;
+}
+
+/* Loading container */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  gap: 16px;
+}
+
+.loading-subtitle {
+  color: #666;
+  font-size: 14px;
+  margin-top: -10px;
+}
+
+/* Text button */
+.text-button {
+  background: none;
+  border: none;
+  color: #4361ee;
+  cursor: pointer;
+  padding: 0;
+  font-size: 14px;
+  text-decoration: underline;
+}
+
+.text-button:hover {
+  color: #3a56d4;
+}
+
+.auth-form-footer {
+  margin-top: 16px;
   text-align: center;
 }

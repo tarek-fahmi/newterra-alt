@@ -1,0 +1,56 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+# Supabase Guidelines for React TypeScript Development
+
+This document serves as a high-level guide for working with Supabase in a React TypeScript application. Refer to the specific rules files for detailed implementations.
+
+## When to Apply Specific Rules
+
+### Database Schema Modifications
+- Use `declarative-database-schema` rules when creating or modifying tables, columns, indexes, or constraints
+- Apply `database-create-migration` rules when writing Postgres migrations for schema changes
+
+### Security and Access Control
+- Follow `database-rls-policies` rules when implementing Row Level Security policies
+- Apply proper permission checks in all database operations
+
+### Database Functions
+- Use `database-functions` rules when creating Postgres functions
+- Follow security guidelines (SECURITY INVOKER, search_path) for all functions
+
+### Authentication
+- Implement `supabase-react-setup-auth` guidelines for authentication flows
+- Use proper session management in React components
+
+### Serverless Functions
+- Follow `edge-functions` rules when implementing Supabase Edge Functions
+- Ensure appropriate error handling and validation
+
+## Best Practices
+
+### TypeScript Integration
+- Use generated types from Supabase for type safety
+- Apply proper typing for all database interactions
+- Keep client-side types in sync with database schema
+
+### Data Fetching
+- Implement proper error handling for all Supabase queries
+- Use React Query or SWR for data fetching when appropriate
+- Implement optimistic updates for better UX
+
+### Real-time Subscriptions
+- Use Supabase real-time features efficiently
+- Clean up subscriptions on component unmount
+
+### Security Considerations
+- Never expose service role keys in client code
+- Use RLS policies consistently
+- Validate all user inputs server-side
+
+## File Organization
+- Keep Supabase client initialization in a dedicated service file
+- Organize database queries into logical service modules
+- Separate authentication logic from data access logic

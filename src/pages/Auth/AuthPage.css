@@ -1,0 +1,622 @@
+/* src/pages/Auth/AuthPage.css */
+body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.auth-page-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background-color: #0A192F;
+    /* Dark Navy Blue */
+    padding: 32px 16px;
+    /* py-8 px-4 */
+    box-sizing: border-box;
+}
+
+.auth-logo-container {
+    width: 80px;
+    /* Increased size from w-40 (Tailwind) = 10rem approx, image is smaller */
+    margin-bottom: 1rem;
+    /* mb-4 */
+}
+
+.auth-logo-text {
+    font-size: 2.25rem;
+    /* text-4xl */
+    line-height: 2.5rem;
+    font-family: serif;
+    /* Assuming a serif font like the image */
+    color: #F3E0BE;
+    /* Soft Amber/Cream */
+    margin-bottom: 1.5rem;
+    /* mb-6 */
+}
+
+.auth-title {
+    font-size: 1.875rem;
+    /* text-2xl */
+    line-height: 2.25rem;
+    font-family: serif;
+    color: #F3E0BE;
+    /* Soft Amber/Cream */
+    margin-bottom: 2rem;
+    /* mb-8 */
+    text-align: center;
+}
+
+.auth-form-wrapper {
+    background-color: #1C2C4C;
+    /* Darker shade than page, but not black */
+    border: 1px solid #38A169;
+    /* green-800 equivalent, but slightly brighter for visibility */
+    border-radius: 0.5rem;
+    /* rounded-lg */
+    padding: 2rem;
+    /* p-8 */
+    width: 100%;
+    max-width: 28rem;
+    /* max-w-md */
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    /* shadow-lg */
+}
+
+/* General Form Styling - applied within form components */
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    /* space-y-5 / space-y-6 from original forms */
+}
+
+.auth-label {
+    display: block;
+    font-size: 0.875rem;
+    /* text-sm */
+    font-weight: 500;
+    color: #CBD5E0;
+    /* slate-300, light gray for dark mode */
+    margin-bottom: 0.5rem;
+    /* mb-2 */
+}
+
+.auth-input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    /* py-3 px-4 */
+    background-color: #2D3748;
+    /* slate-700 */
+    border: 1px solid #4A5568;
+    /* slate-600 */
+    border-radius: 0.375rem;
+    /* rounded-md */
+    color: #E2E8F0;
+    /* slate-200 */
+    font-size: 1rem;
+    line-height: 1.5rem;
+    box-sizing: border-box;
+}
+
+.auth-input::placeholder {
+    color: #718096;
+    /* slate-400 / gray-500 */
+}
+
+.auth-input:focus {
+    outline: none;
+    border-color: #38A169;
+    /* green-700 (brighter green for focus) */
+    box-shadow: 0 0 0 2px rgba(56, 161, 105, 0.3);
+    /* Green focus ring */
+}
+
+.password-input-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.password-input-container .auth-input {
+    padding-right: 3.5rem;
+    /* Space for the toggle button */
+}
+
+.password-toggle-button {
+    position: absolute;
+    right: 0.25rem;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: transparent;
+    border: none;
+    padding: 0.5rem;
+    cursor: pointer;
+    color: #A0AEC0;
+    /* slate-400 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.password-toggle-button:hover {
+    color: #E2E8F0;
+    /* slate-200 */
+}
+
+.auth-checkbox-container {
+    display: flex;
+    align-items: center;
+    margin-top: 0.25rem;
+    /* Small top margin */
+}
+
+.auth-checkbox {
+    height: 1rem;
+    /* h-4 */
+    width: 1rem;
+    /* w-4 */
+    border-radius: 0.25rem;
+    /* rounded */
+    border: 1px solid #718096;
+    /* gray-500 / slate-500 */
+    background-color: #2D3748;
+    /* slate-700 */
+    margin-right: 0.5rem;
+    /* mr-2 */
+    cursor: pointer;
+    appearance: none;
+    /* Remove default appearance */
+    -webkit-appearance: none;
+    position: relative;
+    /* For custom checkmark */
+}
+
+.auth-checkbox:checked {
+    background-color: #38A169;
+    /* green-700 */
+    border-color: #38A169;
+    /* green-700 */
+}
+
+/* Custom checkmark */
+.auth-checkbox:checked::after {
+    content: '\2713';
+    /* Checkmark symbol */
+    font-size: 0.8rem;
+    color: #FFFFFF;
+    /* White checkmark */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.auth-checkbox-label {
+    font-size: 0.875rem;
+    /* text-sm */
+    color: #CBD5E0;
+    /* slate-300 */
+    user-select: none;
+    /* Prevent text selection on click */
+}
+
+.auth-checkbox-label a {
+    color: #F3E0BE;
+    /* amber-100 */
+    text-decoration: none;
+}
+
+.auth-checkbox-label a:hover {
+    text-decoration: underline;
+}
+
+.auth-submit-button {
+    width: 100%;
+    padding: 0.75rem 1.25rem;
+    /* py-3 px-5 */
+    background-color: #38A169;
+    /* green-700/800, primary button color */
+    color: #FFFFFF;
+    /* White text */
+    border: none;
+    border-radius: 0.375rem;
+    /* rounded-md */
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.auth-submit-button:hover {
+    background-color: #2F855A;
+    /* Darker green on hover */
+}
+
+.auth-submit-button:disabled {
+    background-color: #4A5568;
+    /* slate-600 */
+    color: #A0AEC0;
+    /* slate-400 */
+    cursor: not-allowed;
+}
+
+.auth-submit-button .button-spinner {
+    margin-right: 0.5rem;
+    height: 1rem;
+    width: 1rem;
+    animation: spin 1s linear infinite;
+    /* Ensure spinner animation is defined if not globally */
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Divider from original login/signup forms */
+.auth-divider-container {
+    position: relative;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+}
+
+.auth-divider-line {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+}
+
+.auth-divider-line span {
+    width: 100%;
+    border-top: 1px solid #4A5568;
+    /* slate-600 */
+}
+
+.auth-divider-text-wrapper {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    font-size: 0.75rem;
+    /* text-xs */
+    text-transform: uppercase;
+}
+
+.auth-divider-text {
+    background-color: #1C2C4C;
+    /* Match form wrapper background */
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    color: #A0AEC0;
+    /* slate-400 / gray-300 */
+}
+
+/* OAuth Buttons (re-styled to match new theme, if used) */
+.auth-oauth-button {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.625rem 1rem;
+    /* py-2.5 px-4 */
+    margin-bottom: 0.75rem;
+    /* mb-3 */
+    border: 1px solid #4A5568;
+    /* slate-600 */
+    border-radius: 0.375rem;
+    /* rounded-md */
+    background-color: #2D3748;
+    /* slate-700 */
+    cursor: pointer;
+    font-size: 0.875rem;
+    /* text-sm */
+    color: #E2E8F0;
+    /* slate-200 */
+    transition: background-color 0.2s;
+}
+
+.auth-oauth-button:hover {
+    background-color: #4A5568;
+    /* slate-600 */
+}
+
+.auth-oauth-button img {
+    width: 1.25rem;
+    /* w-5 */
+    height: 1.25rem;
+    /* h-5 */
+    margin-right: 0.75rem;
+    /* mr-3 */
+}
+
+
+/* Toggle text and button at the bottom of the form */
+.auth-toggle-text {
+    text-align: center;
+    font-size: 0.875rem;
+    /* text-sm */
+    color: #A0AEC0;
+    /* slate-400 / gray-300 */
+    margin-top: 1.5rem;
+    /* mt-6 */
+}
+
+.auth-toggle-button {
+    background: none;
+    border: none;
+    color: #F3E0BE;
+    /* amber-100 */
+    cursor: pointer;
+    font-weight: 500;
+    padding: 0;
+    margin-left: 0.25rem;
+}
+
+.auth-toggle-button:hover {
+    text-decoration: underline;
+}
+
+/* Forgot password link - specific to Login view */
+.auth-forgot-password-link {
+    display: block;
+    /* Make it block to take full width for centering or to appear on new line */
+    text-align: center;
+    margin-top: 0.75rem;
+    /* mt-3, space from "Don't have an account" line */
+    font-size: 0.875rem;
+    /* text-sm */
+    color: #F3E0BE;
+    /* amber-100 */
+    text-decoration: none;
+}
+
+.auth-forgot-password-link:hover {
+    text-decoration: underline;
+}
+
+/* Footer styles */
+.auth-footer {
+    margin-top: 2rem;
+    /* mt-8 */
+    font-size: 0.875rem;
+    /* text-sm */
+    color: #A0AEC0;
+    /* slate-400 / gray-400 */
+    text-align: center;
+}
+
+.auth-footer-link {
+    color: #CBD5E0;
+    /* slate-300 / gray-300 for slightly more emphasis than regular footer text */
+    text-decoration: none;
+}
+
+.auth-footer-link:hover {
+    color: #F3E0BE;
+    /* amber-100 / Soft Amber/Cream on hover */
+    text-decoration: underline;
+}
+
+/* Error and Info Messages */
+.auth-error-message {
+    color: #FC8181;
+    /* red-400 */
+    margin-top: 0.75rem;
+    font-size: 0.875rem;
+    text-align: center;
+}
+
+.auth-info-message {
+    color: #68D391;
+    /* green-400 */
+    margin-top: 0.75rem;
+    font-size: 0.875rem;
+    text-align: center;
+}
+
+
+/* Specific styles for ForgotPasswordForm if it uses similar structure */
+.forgot-password-form-container .auth-title {
+    /* Assuming ForgotPasswordForm has its own title */
+    margin-bottom: 1.5rem;
+    /* Adjust as needed */
+}
+
+.forgot-password-form-container .auth-form {
+    gap: 1.5rem;
+    /* Adjust spacing if different from login/signup */
+}
+
+.forgot-password-form-container p {
+    /* For descriptive text */
+    font-size: 0.875rem;
+    color: #CBD5E0;
+    /* slate-300 */
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+.forgot-password-back-button {
+    background: none;
+    border: none;
+    color: #F3E0BE;
+    /* amber-100 */
+    cursor: pointer;
+    font-weight: 500;
+    padding: 0.5rem 0;
+    /* Add some padding for easier clicking */
+    margin-top: 1.5rem;
+    display: block;
+    width: 100%;
+    text-align: center;
+}
+
+.forgot-password-back-button:hover {
+    text-decoration: underline;
+}
+
+
+/* Visually hidden class for accessibility */
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+}
+
+/* Styling for NewTerraLogo SVG - ensure it inherits color or set explicitly if needed */
+.auth-logo-container svg {
+    /* fill: #38A169; */
+    /* Example: Green color for the logo, adjust as per actual logo design */
+    /* Or use a class from NewTerraLogo component if it supports it */
+}
+
+/* Adjustments for the specific form elements based on the image: */
+
+/* The input fields and labels need to be styled for the dark theme */
+.auth-form-wrapper .auth-label {
+    color: #E2E8F0;
+    /* Light gray for labels */
+    font-weight: normal;
+    /* Normal weight as per image */
+}
+
+.auth-form-wrapper .auth-input {
+    background-color: #1A202C;
+    /* Slightly lighter than form wrapper, darker than page bg */
+    border: 1px solid #2D3748;
+    /* Darker border */
+    color: #E2E8F0;
+    /* Light text color */
+    border-radius: 0.25rem;
+    /* Slightly less rounded than default .auth-input if needed */
+}
+
+.auth-form-wrapper .auth-input::placeholder {
+    color: #718096;
+    /* Placeholder text color */
+}
+
+.auth-form-wrapper .auth-input:focus {
+    border-color: #38A169;
+    /* Green border on focus */
+    box-shadow: 0 0 0 1px #38A169;
+    /* Subtle green glow */
+}
+
+/* Checkbox specific to image */
+.auth-form-wrapper .auth-checkbox-container {
+    margin-top: 1rem;
+    margin-bottom: 1.5rem;
+    /* Space before Sign Up button */
+}
+
+.auth-form-wrapper .auth-checkbox {
+    background-color: #1A202C;
+    /* Match input background */
+    border-color: #4A5568;
+    /* Darker border */
+}
+
+.auth-form-wrapper .auth-checkbox:checked {
+    background-color: #38A169;
+    /* Green when checked */
+    border-color: #38A169;
+}
+
+.auth-form-wrapper .auth-checkbox:checked::after {
+    color: #1A202C;
+    /* Dark checkmark for contrast against green */
+}
+
+.auth-form-wrapper .auth-checkbox-label {
+    color: #A0AEC0;
+    /* Lighter gray for checkbox text */
+}
+
+.auth-form-wrapper .auth-checkbox-label a {
+    color: #A0AEC0;
+    /* Terms and policy link color */
+    font-weight: bold;
+}
+
+.auth-form-wrapper .auth-checkbox-label a:hover {
+    text-decoration: underline;
+    color: #F3E0BE;
+}
+
+/* Submit button styling from image */
+.auth-form-wrapper .auth-submit-button {
+    background-color: #2F855A;
+    /* Dark Green */
+    color: #FFFFFF;
+    font-weight: bold;
+    padding: 0.875rem 1.25rem;
+    /* py-3.5 px-5 */
+    border-radius: 0.375rem;
+    /* rounded-md */
+}
+
+.auth-form-wrapper .auth-submit-button:hover {
+    background-color: #276749;
+    /* Darker green on hover */
+}
+
+/* Toggle text "Already have an account? Sign In" styling from image */
+.auth-form-wrapper .auth-toggle-text {
+    color: #A0AEC0;
+    /* Light gray */
+}
+
+.auth-form-wrapper .auth-toggle-button {
+    color: #E2E8F0;
+    /* Even lighter gray/white for the button text */
+    font-weight: bold;
+}
+
+.auth-form-wrapper .auth-toggle-button:hover {
+    color: #F3E0BE;
+    /* Amber on hover */
+}
+
+/* Ensure password toggle icon is visible and styled correctly for dark theme */
+.password-toggle-button {
+    color: #A0AEC0;
+    /* Light gray icon */
+}
+
+.password-toggle-button:hover {
+    color: #E2E8F0;
+    /* Lighter on hover */
+}
+
+/* Remove OAuth buttons and divider if not in the target image (they are not in the provided signup image) */
+.auth-oauth-button,
+.auth-divider-container {
+    /* display: none; */
+    /* Uncomment if they must be hidden entirely. For now, assuming they might be used elsewhere or toggled */
+}
+
+/* Styles for SignUpForm specific elements (if any beyond common .auth-form) */
+.signup-form .auth-label {
+    /* Example if SignUpForm needs specific label styling */
+    /* Custom styles */
+}
+
+/* Styles for LoginForm specific elements (if any beyond common .auth-form) */
+.login-form .auth-forgot-password-link {
+    /* Already styled by .auth-forgot-password-link */
+    /* Custom styles if needed, but general one should apply */
+}
